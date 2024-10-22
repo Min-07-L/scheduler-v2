@@ -1,23 +1,29 @@
+import DAYS from "../data/days";
 import { PEOPLE, TIMES } from "../data/leader-board";
 
-export default function SideMenu({ user, setUser, countHours }) {
+export default function SideMenu({ user, setUser, data }) {
   return (
     <div>
-      <div className="bg-base-200 w-side">
-        <Available user={user} setUser={setUser} countHours={countHours} />
-      </div>
+      <Participants user={user} setUser={setUser} data={data} />
       <br />
-      <div className="bg-base-200 w-side">
-        <Overlaps />
-      </div>
+      <Overlaps data={data} />
     </div>
   );
 }
 
-function Available({ user, setUser, countHours }) {
+function Participants({ user, setUser, data }) {
+  let map = {};
+  for (let v of data) {
+    if (!map[v.name]) map[v.name] = 0;
+    map[v.name]++;
+  }
+
+  let rank = Object.keys(map);
+  rank.sort((a, b) => map[b] - map[a]);
+
   return (
-    <div>
-      <h1 className="font-bold text-xl mt-5 mb-2">Priorities</h1>
+    <div className="p-2 bg-gray-100">
+      <h1 className="font-bold text-xl mb-2">Participants</h1>
       <table className="table">
         <thead>
           <tr>
@@ -27,11 +33,23 @@ function Available({ user, setUser, countHours }) {
           </tr>
         </thead>
         <tbody>
-          {PEOPLE.map((people, i) => (
-            <tr className="button" role="button" key={i} onClick={()=>{user == people.name ? setUser(undefined) : setUser(people.name)}}>
+          {rank.map((name, i) => (
+            <tr
+              className="button"
+              role="button"
+              key={i}
+              onClick={() => {
+                user == name ? setUser(undefined) : setUser(name);
+              }}
+            >
               <td>{i + 1}</td>
-              <td><div className={people.name === user ? "font-bold" : ""}>{people.name}</div></td>
-              <td>{countHours(people.name)} hrs</td>
+              <td>
+                <div className={name === user ? "font-bold" : ""}>{name}</div>
+              </td>
+              <td>{map[name]} hrs</td>
+              <td>
+                <button className="btn btn-primary btn-sm">View</button>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -39,24 +57,41 @@ function Available({ user, setUser, countHours }) {
     </div>
   );
 }
-function Overlaps() {
+function Overlaps({ data }) {
+  let map = {};
+  for (let v of data) {
+    let key = JSON.stringify([v.day, v.time]);
+    if (!map[key]) map[key] = 0;
+    map[key]++;
+  }
+
+  let rank = Object.keys(map);
+  rank.sort((a, b) => map[b] - map[a]);
+
   return (
-    <div>
+    <div className="bg-gray-100 p-2">
       <h1 className="font-bold text-xl mt-5 mb-2">Suggestions</h1>
       <table className="table">
         <thead>
           <tr>
-            <th>Rank [ppl]</th>
-            <th>Available hours</th>
+            <th>Rank</th>
+            <th>Slot</th>
+            <th># available</th>
           </tr>
         </thead>
         <tbody>
-          {TIMES.map((slot, i) => (
-            <tr key={i}>
-              <td>{i + 1} [{slot.people} ppl]</td>
-              <td>{slot.time}</td>
-            </tr>
-          ))}
+          {rank.slice(0, 5).map((slot, i) => {
+            let [day, time] = JSON.parse(slot);
+            return (
+              <tr key={i}>
+                <td>{i + 1}</td>
+                <td>
+                  {DAYS[day]} {time % 12 || 12} {time < 12 ? "AM" : "PM"}
+                </td>
+                <td>{map[slot]} people</td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>

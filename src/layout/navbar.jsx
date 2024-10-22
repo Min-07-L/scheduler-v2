@@ -5,9 +5,8 @@ import { AppContext } from "./layout";
 
 export default function Navbar() {
   let { user, setUser } = useContext(AppContext);
-  let [ joinCode, setJoinCode ] = useState(undefined);
   return (
-    <div className="w-full flex justify-center bg-base-200 mb-5 relative">
+    <div className="w-full flex justify-center bg-base-200 relative">
       <div className="navbar w-full h-18 flex justify-between">
         <div className="navbar-start mr-6">
           <div className="dropdown">
@@ -77,61 +76,8 @@ export default function Navbar() {
           )}
         </div>
       </div>
-      {joinCode && <JoinCode close={() => setJoinCode(undefined)} />}
+      
     </div>
   );
 }
 
-function JoinCode({ close }) {
-  let { setUser } = useContext(AppContext);
-  function onSubmit(ev) {
-    ev.preventDefault();
-    setUser({
-      img: "https://img.pikbest.com/backgrounds/20191105/cool-planet-texture-background-image_2844004.jpg!sw800",
-      name: "Min Lim",
-      username: "Min.Lim07",
-      grade: "11th",
-      position: "Treasurer",
-      email: "readbug.lim@gmail.com",
-      interest: "Fun Math Puzzles",
-      joined: `Oct 2nd 2023`,
-    });
-    close();
-  }
-  return (
-    <div
-      className="w-screen h-screen absolute flex justify-center items-center z-10"
-      style={{ backgroundColor: "rgb(0, 0, 0, 0.3)" }}
-    >
-      <form
-        onSubmit={onSubmit}
-        className="p-10 bg-base-100 space-y-3 rounded-xl relative"
-      >
-        <button
-          onClick={close}
-          className="absolute btn btn-xs btn-error right-2 top-2 text-center"
-        >
-          X
-        </button>
-        <div className="text-3xl font-bold py-5 text-center">Enter Join Code</div>
-        <div className="flex items-center space-x-2">
-          <div className="text-xl flex-grow">Join code: </div>
-          <input name="password" type="password" className="w-72 input input-sm input-primary" />
-        </div>
-        <div className="flex items-center space-x-2">
-          <div className="text-xl flex-grow">Password: </div>
-          <input
-            name="password"
-            type="password"
-            className="w-72 input input-sm input-primary"
-          />
-        </div>
-        <div className="flex justify-center pt-5">
-          <button className="btn btn-primary" onClick={onSubmit}>
-            Join Meeting
-          </button>
-        </div>
-      </form>
-    </div>
-  );
-}

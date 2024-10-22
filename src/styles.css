@@ -2,7 +2,7 @@
   box-sizing: border-box;
 }
 
-.App { 
+.App {
   font-family: sans-serif;
   text-align: center;
   box-sizing: border-box;
@@ -76,6 +76,17 @@ a[href^="https"] {
   font-size: "20px";
 }
 
-.heatmap > div{
+.heatmap {
+  /* grid-auto-rows: 30px; */
+}
+
+.heatmap > div {
   border: 1px solid lightgray;
+  padding: 2px;
+}
+
+.heatmap > .header {
+  font-weight: bold;
+  padding-left: 10px;
+  background-color: #efefef;
 }

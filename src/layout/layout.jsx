@@ -1,13 +1,9 @@
-import { Outlet } from "react-router-dom";
-import Navbar from "./navbar";
-import Container from "./container";
-import Footer from "./footer";
 import { createContext, useState } from "react";
-import SideMenu from "../components/site-menu";
+import { Outlet } from "react-router-dom";
+import Footer from "./footer";
+import Navbar from "./navbar";
 
 export let AppContext = createContext(AppContext);
-
-
 
 export default function Layout() {
   let [user, setUser] = useState(undefined);
@@ -15,19 +11,11 @@ export default function Layout() {
 
   return (
     <AppContext.Provider value={{ user, setUser, heatmap, setHeatmap }}>
-      <div className="flex flex-col items-center min-h-screen min-w-fit">
+      <div className="flex flex-col min-h-screen">
         <Navbar />
-        <div
-          className="grid flex-1 gap-10 container"
-          style={{
-            gridTemplateColumns: "1fr 350px",
-          }}
-        >
-          <Container>
-            <Outlet />
-          </Container>
-          
-        </div>
+        <main className="flex-1 flex flex-col">
+          <Outlet />
+        </main>
         <Footer />
       </div>
     </AppContext.Provider>
